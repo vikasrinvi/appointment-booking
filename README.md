@@ -89,13 +89,6 @@ cd frontend
 npm run test
 ```
 
-### End-to-End Tests
-
-Run Cypress tests:
-```bash
-cd frontend
-npm run cypress:open
-```
 
 ## Project Structure
 
@@ -119,7 +112,7 @@ appointment-booking/
 
 The API documentation is available in two formats:
 
-1. Interactive Swagger UI: `/api/docs`
+1. Interactive Swagger UI: `/docs`
    - Provides an interactive interface to explore and test the API
    - Includes detailed request/response examples
    - Shows authentication requirements
@@ -152,4 +145,4 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## Support
 
-For support, email support@example.com or create an issue in the repository.
+For support, email vikasmrnv@@gmail.com or create an issue in the repository.
