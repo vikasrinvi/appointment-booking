@@ -106,7 +106,7 @@ const handleSubmit = async () => {
     loading.value = true
     error.value = ''
     await authStore.register(form.value)
-    router.push('/dashboard')
+    router.push('/')
   } catch (err) {
     error.value = err.message || 'An error occurred during registration'
   } finally {

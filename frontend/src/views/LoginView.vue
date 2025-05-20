@@ -80,7 +80,7 @@ const handleSubmit = async () => {
     loading.value = true
     error.value = ''
     await authStore.login(form.value)
-    router.push('/dashboard')
+    router.push('/')
   } catch (err) {
     error.value = err.message || 'An error occurred during login'
   } finally {

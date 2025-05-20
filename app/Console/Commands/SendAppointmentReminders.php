@@ -16,7 +16,6 @@ class SendAppointmentReminders extends Command
     public function handle(): void
     {
         $now = Carbon::now();
-
         Appointment::query()
             ->where('start_time', '>', $now)
             ->where('start_time', '<=', $now->copy()->addMinutes(30))
