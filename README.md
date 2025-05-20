@@ -117,7 +117,18 @@ appointment-booking/
 
 ## API Documentation
 
-The API documentation is available at `/api/documentation` when running the application.
+The API documentation is available in two formats:
+
+1. Interactive Swagger UI: `/api/docs`
+   - Provides an interactive interface to explore and test the API
+   - Includes detailed request/response examples
+   - Shows authentication requirements
+   - Allows testing endpoints directly from the browser
+
+2. OpenAPI Specification: `/api/docs/swagger.json`
+   - Raw OpenAPI/Swagger specification
+   - Can be imported into API testing tools
+   - Useful for generating client libraries
 
 ### Key Endpoints
 
