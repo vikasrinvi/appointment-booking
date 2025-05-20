@@ -74,11 +74,20 @@
               <div
                 v-for="appointment in getAppointmentsForDay(day.date)"
                 :key="appointment.id"
-                class="text-xs p-1 rounded truncate"
+                class="text-xs p-1 rounded truncate flex items-center justify-between"
                 :class="getAppointmentClass(appointment)"
                 @click.stop="openAppointmentDetails(appointment)"
               >
-                {{ formatAppointmentTime(appointment) }} - {{ appointment.title }}
+                <span class="truncate">{{ formatAppointmentTime(appointment) }} - {{ appointment.title }}</span>
+                <span class="ml-1 px-1 py-0.5 rounded text-[10px] font-medium"
+                  :class="{
+                    'bg-red-200 text-red-800': getAppointmentStatus(appointment) === 'cancelled',
+                    'bg-gray-200 text-gray-800': getAppointmentStatus(appointment) === 'completed',
+                    'bg-blue-200 text-blue-800': getAppointmentStatus(appointment) === 'scheduled'
+                  }"
+                >
+                  {{ getAppointmentStatus(appointment) }}
+                </span>
               </div>
             </div>
           </div>
@@ -228,6 +237,21 @@
             <h4 class="text-sm font-medium text-gray-500">Time</h4>
             <p class="mt-1 text-sm text-gray-900">
               {{ formatAppointmentDateTime(selectedAppointment) }}
+            </p>
+          </div>
+
+          <div>
+            <h4 class="text-sm font-medium text-gray-500">Status</h4>
+            <p class="mt-1">
+              <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium"
+                :class="{
+                  'bg-red-100 text-red-800': getAppointmentStatus(selectedAppointment) === 'cancelled',
+                  'bg-gray-100 text-gray-800': getAppointmentStatus(selectedAppointment) === 'completed',
+                  'bg-blue-100 text-blue-800': getAppointmentStatus(selectedAppointment) === 'scheduled'
+                }"
+              >
+                {{ getAppointmentStatus(selectedAppointment) }}
+              </span>
             </p>
           </div>
 
@@ -420,7 +444,13 @@ const handleBookingSubmit = async () => {
 }
 
 const getAppointmentsForDay = (date) => {
-  return appointmentStore.appointments.filter(appointment => {
+  const allAppointments = [
+    ...(appointmentStore.upcoming || []),
+    ...(appointmentStore.past || []),
+    ...(appointmentStore.cancelled || [])
+  ]
+  
+  return allAppointments.filter(appointment => {
     const appointmentDate = toZonedTime(parseISO(appointment.start_time), 'Asia/Kolkata')
     return (
       appointmentDate.getDate() === date.getDate() &&
@@ -444,11 +474,30 @@ const getAppointmentClass = (appointment) => {
   const now = new Date()
   const appointmentTime = new Date(appointment.start_time)
   
+  if (appointment.status === 'cancelled') {
+    return 'bg-red-100 text-red-800'
+  }
+  
   if (appointmentTime < now) {
     return 'bg-gray-100 text-gray-600'
   }
   
   return 'bg-blue-100 text-blue-800'
+}
+
+const getAppointmentStatus = (appointment) => {
+  const now = new Date()
+  const appointmentTime = new Date(appointment.start_time)
+  
+  if (appointment.status === 'cancelled') {
+    return 'cancelled'
+  }
+  
+  if (appointmentTime < now) {
+    return 'completed'
+  }
+  
+  return 'scheduled'
 }
 
 const openAppointmentDetails = (appointment) => {

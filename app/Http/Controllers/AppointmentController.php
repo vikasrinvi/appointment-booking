@@ -17,10 +17,14 @@ class AppointmentController extends Controller
 
     public function index(Request $request): JsonResponse
     {
-        $appointments = $this->appointmentService->getUpcomingAppointments($request->user());
+        $upcoming = $this->appointmentService->getUpcomingAppointments($request->user());
+        $past = $this->appointmentService->getPastAppointments($request->user());
+        $cancelled = $this->appointmentService->getCancelledAppointments($request->user());
         
         return response()->json([
-            'appointments' => $appointments
+            'upcoming' => $upcoming,
+            'past' => $past,
+            'cancelled' => $cancelled
         ]);
     }
 

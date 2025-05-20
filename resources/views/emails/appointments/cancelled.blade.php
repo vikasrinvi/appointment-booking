@@ -8,7 +8,7 @@
     
     <p>Dear {{ $recipientName }},</p>
     
-    <p>The appointment titled "{{ $appointment->title }}" scheduled for {{ $appointment->start_time->format('F j, Y g:i A') }} ({{ $appointment->timezone }}) has been cancelled.</p>
+    <p>The appointment titled "{{ $appointment->title }}" scheduled for {{ $appointment->formatted_start_time }} ({{ $appointment->timezone }}) has been cancelled.</p>
     
     @if($appointment->description)
         <p><strong>Description:</strong> {{ $appointment->description }}</p>

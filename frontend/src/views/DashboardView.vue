@@ -1,7 +1,5 @@
 <template>
   <div class="min-h-screen bg-gray-100">
-
-
     <div class="py-10">
       <header>
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -24,7 +22,8 @@
                       <dl>
                         <dt class="text-sm font-medium text-gray-500 truncate">Upcoming Appointments</dt>
                         <dd class="flex items-baseline">
-                          <div class="text-2xl font-semibold text-gray-900">{{ upcomingAppointments.length }}</div>
+                          <div v-if="loading" class="text-2xl font-semibold text-gray-900">Loading...</div>
+                          <div v-else class="text-2xl font-semibold text-gray-900">{{ upcomingAppointments?.length || 0 }}</div>
                         </dd>
                       </dl>
                     </div>
@@ -83,7 +82,7 @@
 </template>
 
 <script setup>
-import { computed } from 'vue'
+import { computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useAuthStore } from '@/stores/auth'
 import { useAppointmentStore } from '@/stores/appointment'
@@ -92,7 +91,16 @@ const router = useRouter()
 const authStore = useAuthStore()
 const appointmentStore = useAppointmentStore()
 
-const upcomingAppointments = computed(() => appointmentStore.upcomingAppointments)
+const loading = computed(() => appointmentStore.loading)
+const upcomingAppointments = computed(() => appointmentStore.upcoming || [])
+
+onMounted(async () => {
+  if (!authStore.isAuthenticated) {
+    router.push('/login')
+    return
+  }
+  await appointmentStore.fetchAppointments()
+})
 
 const logout = async () => {
   await authStore.logout()

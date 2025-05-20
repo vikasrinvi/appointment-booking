@@ -35,6 +35,7 @@ class AppointmentService
             'end_time' => $endTime,
             'timezone' => $timezone,
             'reminder_minutes' => $reminderMinutes,
+            'status' => Appointment::STATUS_SCHEDULED,
         ]);
 
         $this->addGuests($appointment, $guests);
@@ -49,15 +50,36 @@ class AppointmentService
             throw new \InvalidArgumentException('Appointments can only be cancelled 30 minutes before the scheduled time.');
         }
 
+        // Update status to cancelled instead of deleting
+        $appointment->update(['status' => Appointment::STATUS_CANCELLED]);
+        
+        // Send notifications
         $this->sendCancellationNotifications($appointment);
-        $appointment->delete();
     }
 
     public function getUpcomingAppointments(User $user): Collection
     {
         return $user->appointments()
             ->where('start_time', '>', now())
+            ->where('status', Appointment::STATUS_SCHEDULED)
             ->orderBy('start_time')
+            ->get();
+    }
+
+    public function getPastAppointments(User $user): Collection
+    {
+        return $user->appointments()
+            ->where('start_time', '<', now())
+            ->where('status', Appointment::STATUS_SCHEDULED)
+            ->orderBy('start_time', 'desc')
+            ->get();
+    }
+
+    public function getCancelledAppointments(User $user): Collection
+    {
+        return $user->appointments()
+            ->where('status', Appointment::STATUS_CANCELLED)
+            ->orderBy('start_time', 'desc')
             ->get();
     }
 

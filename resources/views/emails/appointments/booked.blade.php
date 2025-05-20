@@ -13,7 +13,7 @@
     <h3>Appointment Details:</h3>
     <ul>
         <li><strong>Title:</strong> {{ $appointment->title }}</li>
-        <li><strong>Date & Time:</strong> {{ $appointment->start_time->format('F j, Y g:i A') }} ({{ $appointment->timezone }})</li>
+        <li><strong>Date & Time:</strong> {{ $appointment->formatted_start_time }} ({{ $appointment->timezone }})</li>
         @if($appointment->description)
             <li><strong>Description:</strong> {{ $appointment->description }}</li>
         @endif
